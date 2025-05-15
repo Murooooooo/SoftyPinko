@@ -48,7 +48,7 @@ namespace SoftyPinko.Controllers
                 }
                 return View();
             }
-
+            await _userManager.AddToRoleAsync(user, RoleEnum.Admin.ToString());
 
             return RedirectToAction("login");
 
@@ -76,17 +76,17 @@ namespace SoftyPinko.Controllers
 
             }
 
-            var result = _signInManager.PasswordSignInAsync(user, loginVM.Password, true, false);
+            var result =await _signInManager.PasswordSignInAsync(user, loginVM.Password, true, false);
 
-           await  _userManager.AddToRoleAsync(user, RoleEnum.Member.ToString());
+          
 
             return RedirectToAction("Index", "Home");
         }
 
-        public IActionResult LogOut(int id)
+        public async Task<IActionResult> LogOut(int id)
         {
-            _signInManager.SignOutAsync();
-            return View();
+            await _signInManager.SignOutAsync();
+            return RedirectToAction("Index", "Home");
         }
 
         public async Task<IActionResult> CreateRole()
